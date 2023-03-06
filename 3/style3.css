@@ -5,9 +5,9 @@ body {
 }
 .container-sm{
 	width: 350px;
-  	height: 770px;
+  	height: 600px;
   	background: #c3d1ba;
   	position: relative;
-	border-radius: 30px;
+	border-radius: 50px;
 }
 	

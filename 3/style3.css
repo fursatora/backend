@@ -6,7 +6,8 @@ body {
 .container-sm{
 	width: 516px;
   	height: 770px;
-  	background: white;
+  	background: #c3d1ba;
   	position: relative;
+	border-radius: 30px;
 }
 	

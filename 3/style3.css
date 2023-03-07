@@ -4,11 +4,11 @@ body {
 		background-attachment: fixed;
 	
 }
-.container-sm{
-	width: 200px;
-  	height: 770px;
+.form-floating mb-3{
+	width: 436px;
+  	height: 738px;
   	background: #ccd6c5;
   	position: relative;
-	border-radius: 130px;
+	border-radius: 65px;
 }
 	

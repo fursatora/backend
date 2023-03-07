@@ -16,7 +16,7 @@
   <div class="container-sm theme-list py-3 pl-0 mb-3">
     <div class="d-flex flex-column align-items-center">
 
-      <form class="d-block p-2" action="index.php" method="POST">
+      <form class="d-block p-2" action="index3.php" method="POST">
 
         <div class="form-floating mb-3">
           <input class="form-control" name="fio" type="text" placeholder="FirstName LastName" id="fio">
@@ -31,7 +31,7 @@
         <div class="mb-3">
           <label for="year" class="form-label">Дата рождения</label>
           <select class="form-select" name="year" id="year">
-            <?php for($i = 1900; $i < 2020; $i++) {?>
+            <?php for($i = 1900; $i < 2023; $i++) {?>
             <option value="<?php print $i; ?>"><?= $i; ?></option>
             <?php }?>
           </select>

@@ -1,3 +1,10 @@
+<!-- Bootstrap CSS (Cloudflare CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" integrity="sha512-T584yQ/tdRR5QwOpfvDfVQUidzfgc2339Lc8uBDtcp/wYu80d7jwBgAxbyMh0a9YM9F8N3tdErpFI8iaGx6x5g==" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <!-- jQuery (Cloudflare CDN) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Bootstrap Bundle JS (Cloudflare CDN) -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.min.js" integrity="sha512-UR25UO94eTnCVwjbXozyeVd6ZqpaAE9naiEUBK/A+QDbfSTQFhPGj5lOR6d8tsgbBk84Ggb5A3EkjsOgPRPcKA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <form action="" method="POST">
   <div class="form-floating mb-3">
           <input class="form-control" name="fio" type="text" placeholder="FirstName LastName" id="fio">
@@ -40,10 +47,14 @@
           <input class="form-check-input" type="radio" name="limb" id="limb5" value="10">
             <label class="form-check-label">10</label>
         </div>
-   
+  
+   $(document).ready(function() {
+    $('#example-getting-started').multiselect();
+});
+  
   <div class="mb-3">
           <label class="form-label">Сверхсособности</label>
-          <select class="form-select" name="abilities[]" multiple="multiple">
+          <select class="form-select" id="example-getting-started" name="abilities[]" multiple="multiple">
             <option value="immort">Бессмертие</option>
             <option value="wall">Прохождение сковзь стены</option>
             <option value="levit">Левитация</option>

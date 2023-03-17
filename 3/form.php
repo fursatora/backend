@@ -4,12 +4,10 @@
   <meta charset="utf-8">
   <title>Lab 3</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
-        rel="stylesheet"    
-  $(document).ready(function() {
-    $('#example-getting-started').multiselect();
-});
-        
+        rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"      
 </head>
+  
 <body>
 <div class="container">
   <h1 class="text-center m-5">Web Backend Lab 3</h1>
@@ -91,8 +89,8 @@
         </div>
 </div>
 <footer>
-  <h2 class="text-center m-3">
+  <h3 class="text-center m-3">
    Фурса В.Е. 2023
-  </h2>
+  </h3>
 </footer>
 </body>

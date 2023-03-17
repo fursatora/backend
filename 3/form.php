@@ -62,15 +62,7 @@
         </div>
    
    <div class="d-grid gap-2 col-6 mx-auto">
-          <button class="btn btn-light" type="submit" value="Отправить">Отправлено!</button>
+          <button class="btn btn-light" type="submit" value="send">Отправить</button>
         </div>
 
-
-
-
-
-
-
-  
-  //<input type="submit" value="ok" />
 </form>

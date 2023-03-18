@@ -35,6 +35,12 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
   $errors = TRUE;
 }
 
+//fio
+if (empty($_POST['bio'])) {
+  print('Заполните поле.<br/>');
+  $errors = TRUE;
+}
+
 //accept
 if (empty($_POST['accept'])) {
     print("Вы не приняли соглашение<br>");

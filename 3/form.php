@@ -70,7 +70,7 @@
                 </div>
 
            <div class="mb-3 form-floating">
-                  <textarea class="form-control" name="text" placeholder="Биография" style="height: 100px; width: 420px;"></textarea>
+                  <textarea class="form-control" name="bio" placeholder="Биография (не более 120 символов)" style="height: 100px; width: 420px;"></textarea>
                   <label class="form-label">Биография</label>
                 </div>
 

@@ -21,7 +21,7 @@ if (empty($_POST['fio'])) {
 else if (!preg_match("/^[а-яА-Яa-zA-Z ]+$/u", $_POST['fio'])) {
     print('Недопустимые символы в имени.<br>');
     $errors = TRUE;
-
+}
   
 //email
   if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -62,4 +62,4 @@ catch(PDOException $e){
   exit();
 }
 header('Location: ?save=1');
-?>
+

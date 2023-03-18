@@ -41,8 +41,8 @@
            <div class="mb-3">
                   <label class="form-label">Пол</label>
                   <br>
-                  <input class="form-check-input" type="radio" name="sex" id="sex1" value="0" checked> Male
-                  <input class="form-check-input" type="radio" name="sex" id="sex2" value="1"> Female
+                  <input class="form-check-input" type="radio" name="sex" id="sex1" value="м" checked> Male
+                  <input class="form-check-input" type="radio" name="sex" id="sex2" value="ж"> Female
                 </div>
 
            <div class="mb-3">

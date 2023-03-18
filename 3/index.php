@@ -35,7 +35,7 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
   $errors = TRUE;
 }
 
-/accept
+//accept
 if (empty($_POST['accept'])) {
     print("Вы не приняли соглашение<br>");
     $errors = TRUE;

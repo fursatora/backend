@@ -35,7 +35,28 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
   $errors = TRUE;
 }
 
-//fio
+//abilities
+$ability_data = ['1', '2', '3', '4'];
+if (empty($_POST['abilities'])) {
+    print('Выберите способность<br>');
+    $errors = TRUE;
+}
+else {
+    $abilities = $_POST['abilities'];
+    foreach ($abilities as $ability) {
+        if (!in_array($ability, $ability_data)) {
+            print('Недопустимая способность<br>');
+            $errors = TRUE;
+        }
+    }
+}
+$ability_insert = [];
+foreach ($ability_data as $ability) {
+    $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
+}
+
+
+//bio
 if (empty($_POST['bio'])) {
   print('Заполните поле.<br/>');
   $errors = TRUE;
@@ -61,7 +82,8 @@ $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
 // Подготовленный запрос. Не именованные метки.
 try {
   $stmt = $db->prepare("INSERT INTO application SET name = ?, year=?, sex=?,email=?,bio=?,limb=?");
-  $stmt->execute([$_POST['fio'], $_POST['year'], $_POST['sex'],$_POST['email'], $_POST['bio'],$_POST['limb']]);
+  $stmt = $db->prepare("INSERT INTO app_ability SET abilities = ?");
+  $stmt->execute([$_POST['fio'], $_POST['year'], $_POST['sex'],$_POST['email'], $_POST['bio'],$_POST['limb'],$ability_insert['1'],$ability_insert['2'],$ability_insert['3'],$ability_insert['4']]);
 }
 catch(PDOException $e){
   print('Error : ' . $e->getMessage());

@@ -36,19 +36,12 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
 }
 
 //abilities
-$ability_data = ['1', '2', '3', '4'];
 if (empty($_POST['abilities'])) {
     print('Выберите способность<br>');
     $errors = TRUE;
 }
 else {
     $abilities = $_POST['abilities'];
-    foreach ($abilities as $ability) {
-        if (!in_array($ability, $ability_data)) {
-            print('Недопустимая способность<br>');
-            $errors = TRUE;
-        }
-    }
 }
 $ability_insert = [];
 foreach ($ability_data as $ability) {

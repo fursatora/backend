@@ -62,10 +62,10 @@
           <div class="mb-3">
                   <label class="form-label">Сверхсособности</label>
                   <select class="form-select" id="example-getting-started" name="abilities[]" multiple="multiple">
-                    <option value="immort">Бессмертие</option>
-                    <option value="wall">Прохождение сковзь стены</option>
-                    <option value="levit">Левитация</option>
-                    <option value="invis">Невидимость</option>
+                    <option value="1">Бессмертие</option>
+                    <option value="2">Прохождение сковзь стены</option>
+                    <option value="3">Левитация</option>
+                    <option value="4">Невидимость</option>
                   </select>
                 </div>
 

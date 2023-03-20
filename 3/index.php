@@ -36,6 +36,7 @@ if (empty($_POST['year']) || !is_numeric($_POST['year']) || !preg_match('/^\d+$/
 }
 
 //abilities
+$ability_data = ['1', '2', '3', '4'];
 if (empty($_POST['abilities'])) {
     print('Выберите способность<br>');
     $errors = TRUE;

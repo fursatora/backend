@@ -77,7 +77,7 @@ $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
 try {
   $stmt = $db->prepare("INSERT INTO application SET name = ?, year=?, sex=?,email=?,bio=?,limb=?");
   $stmt->execute([$_POST['fio'], $_POST['year'], $_POST['sex'],$_POST['email'], $_POST['bio'],$_POST['limb']]);
-  $stmt = $db->prepare("INSERT INTO app_ability SET abilities = ?");
+  $stmt = $db->prepare("INSERT INTO app_ability SET abil_id = ?");
   $stmt->execute([$ability_insert['abil_id']]);
 
 }

@@ -75,8 +75,8 @@ $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
 
 // Подготовленный запрос. Не именованные метки.
 try {
-  $stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limb=?,bio=?");
-  $stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
+  $stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
+  $stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limbs'],$_POST['bio']]);
   
   $app_id = $db->lastInsertId();
   $stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");

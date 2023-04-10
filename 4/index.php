@@ -185,4 +185,7 @@ catch(PDOException $e){
   print('Error : ' . $e->getMessage());
   exit();
 }
-header('Location: ?save=1');
+setcookie('save', '1');
+    header('Location: index.php');
+}
+

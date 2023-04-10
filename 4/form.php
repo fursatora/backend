@@ -64,7 +64,7 @@ if (!empty($messages)) {
         
 
           <div class="mb-3">
-                  <label for="year" class="form-label">Дата рождения</label>
+                  <label for="year" class="form-label">Год рождения</label>
                   <select class="form-select" name="year" id="year">
                     <?php 
                        for($i = 1900; $i < 2020; $i++){
@@ -82,7 +82,7 @@ if (!empty($messages)) {
                         class="form-check-input"
                         type="radio"
                         name="sex"
-                        value="1"
+                        value="0"
                         <?php if($values['sex_value'] == 1) print 'checked';?>
                     > Male
 
@@ -90,7 +90,7 @@ if (!empty($messages)) {
                         class="form-check-input"
                         type="radio"
                         name="sex"
-                        value="2"
+                        value="1"
                         <?php if($values['sex_value'] == 2) print 'checked';?>
                     > Female
 

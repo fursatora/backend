@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Lab 3</title>
+  <title>Lab 4</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
         rel="stylesheet"
   <style>
@@ -64,15 +64,15 @@ if (!empty($messages)) {
         
 
           <div class="mb-3">
-                  <label for="year" class="form-label">Год рождения</label>
-                  <select class="form-select" name="year" id="year">
-                    <?php 
-                       for($i = 1900; $i < 2020; $i++){
-                        printf('<option value="%d">%d год</option>', $i, $i);
-                        }
-                     ?>
-                    <input <?php if ($errors['year_empty'] || $errors['year_error']) {print 'class="form-select error"';}else{print 'class="form-select"';} ?> type="date" name="year" autocomplete="off" id="year" value="<?php print $values['year_value']; ?>">
-                </div>
+            <label for="year" class="form-label">Год рождения</label>
+                <select <?php if ($errors['year_empty'] {print 'class="form-select error"';}else{print 'class="form-select"';} ?> name="year" id="year">
+                    <option selected="selected" value="---">---</option>
+                    <?php for($i = 1900; $i < 2020; $i++) {?>
+                          <option <?php if($values['year_value'] == $i) print 'selected="selected"';?> value="<?php print $i; ?>"><?= $i; ?></option>
+                  <?php }?>
+                </select>
+        </div>
+
 
             
                 <div class="mb-3">
@@ -83,7 +83,7 @@ if (!empty($messages)) {
                         type="radio"
                         name="sex"
                         value="0"
-                        <?php if($values['sex_value'] == 1) print 'checked';?>
+                        <?php if($values['sex_value'] == 0) print 'checked';?>
                     > Male
 
                     <input
@@ -91,7 +91,7 @@ if (!empty($messages)) {
                         type="radio"
                         name="sex"
                         value="1"
-                        <?php if($values['sex_value'] == 2) print 'checked';?>
+                        <?php if($values['sex_value'] == 1) print 'checked';?>
                     > Female
 
                 </div>

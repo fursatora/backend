@@ -65,7 +65,7 @@ if (!empty($messages)) {
 
           <div class="mb-3">
             <label for="year" class="form-label">Год рождения</label>
-                <select <?php if ($errors['year_empty'] {print 'class="form-select error"';}else{print 'class="form-select"';} ?> name="year" id="year">
+                <select <?php if ($errors['year_empty']) {print 'class="form-select error"';}else{print 'class="form-select"';} ?> name="year" id="year">
                     <option selected="selected" value="---">---</option>
                     <?php for($i = 1900; $i < 2020; $i++) {?>
                           <option <?php if($values['year_value'] == $i) print 'selected="selected"';?> value="<?php print $i; ?>"><?= $i; ?></option>

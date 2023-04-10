@@ -166,8 +166,8 @@ else{
     $pass = '4296369';
 
     try {
-        $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
-        [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+        $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
+          [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
        // Подготовленный запрос. Не именованные метки.
 try {

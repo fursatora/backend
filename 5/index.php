@@ -1,5 +1,26 @@
 <?php
+ $user = 'u52827';
+ $pass = '4296369';
 header('Content-Type: text/html; charset=UTF-8');
+
+function getUserId($login){
+    $user = 'u47554';
+    $pass = '6645271';
+    $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+    try {
+        $get_id = $db->prepare("SELECT user_id FROM login WHERE login=:login");
+        $db->beginTransaction();
+        $get_id->execute(array("login" => $login));
+        $id = (current(current($get_id->fetchAll(PDO::FETCH_ASSOC))));
+        $db->commit();
+    }
+    catch(PDOException $e) {
+        print('Error : ' . $e->getMessage());
+        exit();
+    }
+    return $id;
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages = array();
@@ -7,8 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (empty($_COOKIE['limb_value'])) $_COOKIE['limb_value'] = 2;
     if (!empty($_COOKIE['save'])) {
         setcookie('save', '', 100000);
-        $messages[] = 'Спасибо, результаты сохранены.';
+        setcookie('login', '', 100000);
+        setcookie('pass', '', 100000);
+        $messages[] = '<div class="alert alert-secondary" role="alert">Спасибо, результаты сохранены</div>';
+        if (!empty($_COOKIE['pass'])) {
+            $messages[] = sprintf('
+<div class="alert alert-secondary" role="alert">Вы можете <a href="login.php"><button class="btn btn-secondary">войти</button></a> с логином <strong>%s</strong>
+        и паролем <strong>%s</strong> для изменения данных.</div>',
+                strip_tags($_COOKIE['login']),
+                strip_tags($_COOKIE['pass']));
+        }
     }
+    
     $errors = array();
     $errors['fio_empty'] = !empty($_COOKIE['fio_empty']);
     $errors['fio_error'] = !empty($_COOKIE['fio_error']);
@@ -70,8 +101,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['ability'.$i] = empty($_COOKIE['ability'.$i]) ? '' : ($_COOKIE['ability'.$i]);
     }
 
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+
+    $check = true;
+    foreach($errors as $error){
+        if($error){
+            $check = false;
+        }
+    }
+
+    if ($check && !empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) {
+        $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+        $id = getUserId($_SESSION['login']);
+        try {
+            $stmt = $db->prepare("SELECT * FROM users WHERE id=:id");
+            $result = $stmt->execute(array("id"=>$id));
+            $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
+        }
+        catch(PDOException $e) {
+            print('Error : ' . $e->getMessage());
+            exit();
+        }
+
+        $values['fio_value'] = filter_var($data['name'],  FILTER_SANITIZE_SPECIAL_CHARS);
+        $values['email_value'] = filter_var($data['email'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $values['year_value'] = filter_var($data['year'],  FILTER_SANITIZE_SPECIAL_CHARS);
+        $values['sex-value'] = $data['sex'];
+        $values['limb_value'] = $data['limb'];
+        $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
+
+        try {
+            $stmt = $db->prepare("SELECT * FROM abilities WHERE user_id=:id");
+            $result = $stmt->execute(array("id"=>$id));
+            $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
+        }
+        catch(PDOException $e) {
+            print('Error : ' . $e->getMessage());
+            exit();
+        }
+
+        $ability_data = ['1', '2', '3', '4'];
+        for($i=0; $i<4; $i++){
+            $values['ability'.$i] = $data[$ability_data[$i]];
+        }
+
+        printf('<div class="alert alert-secondary" role="alert">
+  Вход с логином %s', $_SESSION['login']);
+        printf('</div>');
+    }
     include('form.php');
 }
+
+
 else{
     $errors = FALSE;
 
@@ -155,19 +238,25 @@ else{
         setcookie('accept_error', '', 100000);
     }
 
-    $user = 'u52827';
-    $pass = '4296369';
+    
+    if (!isset($_SESSION)) { session_start(); }
+    
     $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
         [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
     try {
-        $stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
-        $stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
+        $first_stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
+        $first_stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
   
         $app_id = $db->lastInsertId();
-        $stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
+        $second_stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
         foreach ($abilities as $ability) {
-             $stmt -> execute([$app_id, $ability]);
+             $second_stmt -> execute([$app_id, $ability]);
+            
+        $third_stmt = $db->prepare("INSERT INTO login (user_id, login, pwd) VALUES (?,?,?)");
+                $db->beginTransaction();
+                $third_stmt->execute(array($id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+                $db->commit();
         }
 
     }

@@ -217,7 +217,7 @@ else{
 
     if (!$errors) {
         setcookie('sex_value', $_POST['sex'], time() + 30 * 24 * 60 * 60);
-        setcookie('bio_value', $_POST['text'], time() + 30 * 24 * 60 * 60);
+        setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
         setcookie('limb_value', $_POST['limb'], time() + 30 * 24 * 60 * 60);
         setcookie('accept_value', $_POST['accept'], time() + 30 * 24 * 60 * 60);
     }

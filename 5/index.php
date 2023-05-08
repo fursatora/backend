@@ -254,8 +254,8 @@ else{
              $second_stmt -> execute([$app_id, $ability]);
          
         $app_id = $db->lastInsertId();    
-        $third_stmt = $db->prepare("INSERT INTO login SET user_id=?, login=?, pwd=?);
-        $third_stmt->execute(array($app_id, $id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+        $third_stmt = $db->prepare("INSERT INTO login SET app_id=?,login=?, pwd=?);
+        $third_stmt->execute(array($app_id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
         }
 
     }

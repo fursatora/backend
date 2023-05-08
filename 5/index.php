@@ -269,9 +269,7 @@ else{
 
         try {
             $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
-            $first_stmt = $db->prepare("INSERT INTO users (name,year,sex,email,bio,limb) VALUES (?,?,?,?,?,?)");
-
-            try{
+            
              $first_stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
              $first_stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
          

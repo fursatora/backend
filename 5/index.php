@@ -221,7 +221,12 @@ else{
         setcookie('limb_value', $_POST['limb'], time() + 30 * 24 * 60 * 60);
         setcookie('accept_value', $_POST['accept'], time() + 30 * 24 * 60 * 60);
     }
-
+ 
+   $ability_insert = [];
+    foreach ($ability_data as $ability) {
+        $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
+    }
+ 
     if ($errors) {
         header('Location: index.php');
         exit();
@@ -241,29 +246,52 @@ else{
     
     if (!isset($_SESSION)) { session_start(); }
     
-    $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass,
-        [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+     if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) {
+        $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+        try {
+            $id = getUserId($_SESSION['login']);
+            $second_stmt = $db->prepare("UPDATE users SET name=:name, year=:year, sex=:sex, email=:email, bio=:bio, limb=:limb WHERE id =:id");
+            $second_stmt -> execute(array("name" => $_POST['fio'], "year" => $_POST['year'], "sex" => $_POST['sex'], "email" => $_POST['email'], "bio"=>$_POST['text'], "limb"=>$_POST['limb'], "id"=>$id));
+            $third_stmt = $db->prepare("UPDATE abilities SET 1=:1, 2=:2, 3=:3, 4=:4 WHERE user_id=:id");
+            $third_stmt->execute(array("1" => $ability_insert['1'], "2" => $ability_insert['2'], "3" => $ability_insert['3'], "4" => $ability_insert['4'], "id" => $id));
 
-    try {
-        $first_stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
-        $first_stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
-  
-        $app_id = $db->lastInsertId();
-        $second_stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
-        foreach ($abilities as $ability) {
-             $second_stmt -> execute([$app_id, $ability]);
-         
-        $app_id = $db->lastInsertId();    
-        $third_stmt = $db->prepare("INSERT INTO login SET app_id=?,login=?, pwd=?");
-        $third_stmt->execute(array($app_id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
         }
-
+        catch(PDOException $e) {
+            print('Error : ' . $e->getMessage());
+            exit();
+        }
     }
-    catch(PDOException $e) {
-        print('Error : ' . $e->getMessage());
-        exit();
-    }
+    else {
+        $login = uniqid("user");
+        $pwd = rand(10000000,100000000);
+        setcookie('login', $login);
+        setcookie('pass', $pwd);
 
+        try {
+            $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
+            $first_stmt = $db->prepare("INSERT INTO users (name,year,sex,email,bio,limb) VALUES (?,?,?,?,?,?)");
+
+            try{
+             $first_stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
+             $first_stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
+         
+             $app_id = $db->lastInsertId();
+             $second_stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
+             foreach ($abilities as $ability) {
+             $second_stmt -> execute([$app_id, $ability]);
+            
+              $app_id = $db->lastInsertId();
+              $third_stmt = $db->prepare("INSERT INTO login (app_id, login, pwd) VALUES (?,?,?)");
+              $db->beginTransaction();
+              $third_stmt->execute(array($app_id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+             
+            
+        catch(PDOException $e) {
+            print('Error : ' . $e->getMessage());
+            exit();
+        }
+    }
     setcookie('save', '1');
+
     header('Location: index.php');
 }

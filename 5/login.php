@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     </div>
     <footer>
         <h2 class="text-center m-3">
-            Тиунов 21/2
+            Фурса 23
         </h2>
     </footer>
     </body>
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 else {
     $user = 'u52827';
     $pass = '4296369';
-    $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+    $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
         $stmt = $db->prepare("SELECT * FROM login WHERE login=:login");
         $stmt->execute(array("login"=>$_POST['login']));
@@ -75,7 +75,7 @@ else {
     }
     else {
         if (password_verify($_POST['pwd'], $data['pwd'])) {
-            $_SESSION['uid'] = $data['user_id'];
+            $_SESSION['uid'] = $data['app_id'];
             $_SESSION['login'] = $_POST['login'];
             header('Location: ./');
             exit();

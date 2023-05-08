@@ -289,8 +289,8 @@ else{
             print('Error : ' . $e->getMessage());
             exit();
         }
-    
+    }
     setcookie('save', '1');
-
+    
     header('Location: index.php');
 }

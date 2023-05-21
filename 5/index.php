@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM abilities WHERE app_id=:id");
+            $stmt = $db->prepare("SELECT * FROM app_ability WHERE app_id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -252,7 +252,7 @@ else {
 
         try {
             $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
-            $first_stmt = $db->prepare("INSERT INTO users (fio,email,year,sex,limbs,biography) VALUES (?,?,?,?,?,?)");
+            $first_stmt = $db->prepare("INSERT INTO application (fio,email,year,sex,limbs,biography) VALUES (?,?,?,?,?,?)");
 
             try{
                 $db->beginTransaction();

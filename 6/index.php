@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $messages[] = '<div class="error">Вы не согласились.</div>';
     }
     $values = array();
-     $values['fio_value'] = empty($_COOKIE['fio_value']) || !empty($_SESSION['is_admin']) ? '' : $_COOKIE['fio_value'];
+    $values['fio_value'] = empty($_COOKIE['fio_value']) || !empty($_SESSION['is_admin']) ? '' : $_COOKIE['fio_value'];
     $values['email_value'] = empty($_COOKIE['email_value']) || !empty($_SESSION['is_admin']) ? '' : $_COOKIE['email_value'];
     $values['year_value'] = empty($_COOKIE['year_value']) || !empty($_SESSION['is_admin']) ? '' : $_COOKIE['year_value'];
     $values['bio_value'] = empty($_COOKIE['bio_value']) || !empty($_SESSION['is_admin']) ? '' : $_COOKIE['bio_value'];
@@ -152,6 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
         printf('</div>');
     }
+    include('form.php');
+}
 else {
 
     $errors = FALSE;

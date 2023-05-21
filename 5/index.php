@@ -4,9 +4,9 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 function getUserId($login){
-    $user = 'u47554';
-    $pass = '6645271';
-    $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+    $user = 'u52827';
+    $pass = '4296369';
+    $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
         $get_id = $db->prepare("SELECT user_id FROM login WHERE login=:login");
         $db->beginTransaction();
@@ -247,7 +247,7 @@ else{
     if (!isset($_SESSION)) { session_start(); }
     
      if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) {
-        $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+        $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
             $second_stmt = $db->prepare("UPDATE users SET name=:name, year=:year, sex=:sex, email=:email, bio=:bio, limb=:limb WHERE id =:id");

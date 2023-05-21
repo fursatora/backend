@@ -1,11 +1,11 @@
 <?php
- $user = 'u52827';
- $pass = '4296369';
+$user = 'u52827';
+$pass = '4296369';
 header('Content-Type: text/html; charset=UTF-8');
 
 function getUserId($login){
     $user = 'u52827';
-    $pass = '4296369';
+    $pass = '6645271';
     $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
         $get_id = $db->prepare("SELECT app_id FROM login WHERE login=:login");
@@ -20,7 +20,6 @@ function getUserId($login){
     }
     return $id;
 }
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages = array();
@@ -39,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 strip_tags($_COOKIE['pass']));
         }
     }
-    
     $errors = array();
     $errors['fio_empty'] = !empty($_COOKIE['fio_empty']);
     $errors['fio_error'] = !empty($_COOKIE['fio_error']);
@@ -72,6 +70,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         setcookie('sex_empty', '', 100000);
         $messages[] = '<div class="error">Выберите пол.</div>';
     }
+    if ($errors['year_error']) {
+        setcookie('year_error', '', 100000);
+        $messages[] = '<div class="error">Некорректные данные в поле: дата рождения.</div>';
+    }
     if ($errors['limb_empty']) {
         setcookie('limb_empty', '', 100000);
         $messages[] = '<div class="error">Выберите число конечностей.</div>';
@@ -88,7 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         setcookie('accept_error', '', 100000);
         $messages[] = '<div class="error">Вы не согласились.</div>';
     }
-
     $values = array();
     $values['fio_value'] = empty($_COOKIE['fio_value']) ? '' : $_COOKIE['fio_value'];
     $values['email_value'] = empty($_COOKIE['email_value']) ? '' : $_COOKIE['email_value'];
@@ -128,12 +129,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['fio_value'] = filter_var($data['fio'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['email_value'] = filter_var($data['email'], FILTER_SANITIZE_SPECIAL_CHARS);
         $values['year_value'] = filter_var($data['year'],  FILTER_SANITIZE_SPECIAL_CHARS);
-        $values['sex_value'] = $data['sex'];
+        $values['sex-value'] = $data['sex'];
         $values['limb_value'] = $data['limb'];
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM app_ability WHERE app_id=:id");
+            $stmt = $db->prepare("SELECT * FROM abilities WHERE app_id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -153,9 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
     include('form.php');
 }
+else {
 
-
-else{
     $errors = FALSE;
 
     if (empty($_POST['fio'])) {
@@ -187,13 +187,11 @@ else{
     else {
             setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
         }
-    
 
     //abilities
     $ability_data = ['1', '2', '3', '4'];
     if (empty($_POST['abilities'])) {
         setcookie('abilities_empty', '1', time() + 24 * 60 * 60);
-        //print('Выберите способность<br>');
         $errors = TRUE;
     }
     else {
@@ -204,34 +202,26 @@ else{
                 $errors = TRUE;
             }
         }
-        if(!$errors){
-            $ability_insert = [];
-            $i=0;
-            foreach ($ability_data as $ability) {
-                $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
-                setcookie('ability'.$i, $ability_insert[$ability], time() + 30 * 24 * 60 * 60);
-                $i++;
-            }
-        }
+        
     }
 
     if (!$errors) {
         setcookie('sex_value', $_POST['sex'], time() + 30 * 24 * 60 * 60);
         setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
         setcookie('limb_value', $_POST['limbs'], time() + 30 * 24 * 60 * 60);
-        setcookie('accept_value', $_POST['accept'], time() + 30 * 24 * 60 * 60);
     }
- 
- 
-    if ($errors) {
+
+   
+    if($errors){
         header('Location: index.php');
         exit();
     }
-    else{
+    else {
         setcookie('fio_empty', '', 100000);
         setcookie('fio_error', '', 100000);
         setcookie('email_error', '', 100000);
         setcookie('year_empty', '', 100000);
+        setcookie('year_error', '', 100000);
         setcookie('sex_error', '', 100000);
         setcookie('limb_empty', '', 100000);
         setcookie('abilities_empty', '', 100000);
@@ -239,22 +229,16 @@ else{
         setcookie('accept_error', '', 100000);
     }
 
-    
     if (!isset($_SESSION)) { session_start(); }
-    
-     if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) {
+
+    if (!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) {
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
-            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, bio=:bio WHERE id =:id");
-            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limb"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
-        $app_id = $db->lastInsertId();
-       $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id WHERE app_id=:id");
-         foreach ($abilities as $ability) {
-            $third_stmt -> execute([$app_id, $ability]);
-        }
-
-        }
+            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, year=:year, sex=:sex, email=:email, bio=:bio, limbs=:limbs WHERE id =:id");
+            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limb"=>$_POST['limbs'], "biography"=>$_POST['bio'], "id"=>$id));
+            $third_stmt = $db->prepare("UPDATE app_ability SET abil_id WHERE app_id=:id");
+         
         catch(PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();
@@ -268,29 +252,38 @@ else{
 
         try {
             $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
-            
-             $first_stmt = $db->prepare("INSERT INTO application SET fio = ?,email=?,year=?,sex=?,limbs=?,biography=?");
-             $first_stmt->execute([$_POST['fio'],$_POST['email'],$_POST['year'], $_POST['sex'],$_POST['limb'],$_POST['bio']]);
-         
+            $first_stmt = $db->prepare("INSERT INTO users (fio,email,year,sex,limbs,biography) VALUES (?,?,?,?,?,?)");
+
+            try{
+                $db->beginTransaction();
+                $first_stmt->execute(array($_POST['fio'], $_POST['year'], $_POST['sex'], $_POST['email'], $_POST['bio'], $_POST['limb']));
+                $id = $db->lastInsertId();
+                $db->commit();
+            } catch (PDOException $exception){
+                print "Error: " . $exception->getMessage() . "</br>";
+            }
+
              $app_id = $db->lastInsertId();
              $second_stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
              foreach ($abilities as $ability) {
              $second_stmt -> execute([$app_id, $ability]);
              }
-            
-              $app_id = $db->lastInsertId();
-              $third_stmt = $db->prepare("INSERT INTO login (app_id, login, pwd) VALUES (?,?,?)");
-              $db->beginTransaction();
-              $third_stmt->execute(array($id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
-              $db->commit();
-             }
-           
+         
+            try {
+                $third_stmt = $db->prepare("INSERT INTO login (app_id, login, pwd) VALUES (?,?,?)");
+                $db->beginTransaction();
+                $third_stmt->execute(array($id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+                $db->commit();
+            } catch (PDOException $exception){
+                print "Error: " . $exception->getMessage() . "</br>";
+            }
+        }
         catch(PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();
         }
     }
     setcookie('save', '1');
-    
+
     header('Location: index.php');
 }

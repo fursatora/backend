@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM abilities WHERE app_id=:id");
+            $stmt = $db->prepare("SELECT * FROM app_ability WHERE app_id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -218,7 +218,7 @@ else{
     if (!$errors) {
         setcookie('sex_value', $_POST['sex'], time() + 30 * 24 * 60 * 60);
         setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
-        setcookie('limb_value', $_POST['limb'], time() + 30 * 24 * 60 * 60);
+        setcookie('limb_value', $_POST['limbs'], time() + 30 * 24 * 60 * 60);
         setcookie('accept_value', $_POST['accept'], time() + 30 * 24 * 60 * 60);
     }
  
@@ -246,8 +246,8 @@ else{
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
-            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, biography=:bio WHERE id =:id");
-            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limbs"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
+            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, bio=:bio WHERE id =:id");
+            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limb"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
         $app_id = $db->lastInsertId();
        $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id WHERE app_id=:id");
          foreach ($abilities as $ability) {

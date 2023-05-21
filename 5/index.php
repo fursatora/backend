@@ -143,11 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             exit();
         }
 
-        $ability_data = ['1', '2', '3', '4'];
-        for($i=0; $i<4; $i++){
-            $values['ability'.$i] = $data[$ability_data[$i]];
-        }
-
+        
         printf('<div class="alert alert-secondary" role="alert">
   Вход с логином %s', $_SESSION['login']);
         printf('</div>');

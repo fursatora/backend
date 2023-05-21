@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['fio_value'] = filter_var($data['name'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['email_value'] = filter_var($data['email'], FILTER_SANITIZE_SPECIAL_CHARS);
         $values['year_value'] = filter_var($data['year'],  FILTER_SANITIZE_SPECIAL_CHARS);
-        $values['sex-value'] = $data['sex'];
+        $values['sex_value'] = $data['sex'];
         $values['limb_value'] = $data['limb'];
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 

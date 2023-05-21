@@ -11,9 +11,9 @@
 
 <?php
 
-    $user='u47554';
-    $pass='6645271';
-    $db = new PDO('mysql:host=localhost;dbname=u47554', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
+   $user = 'u52827';
+   $pass = '4296369';
+    $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
     try {
         $stmt = $db->prepare("SELECT password FROM admin WHERE login=:login");

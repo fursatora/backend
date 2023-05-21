@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         $id = getUserId($_SESSION['login']);
         try {
-            $stmt = $db->prepare("SELECT * FROM users WHERE id=:id");
+            $stmt = $db->prepare("SELECT * FROM application WHERE id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -247,9 +247,9 @@ else{
         try {
             $id = getUserId($_SESSION['login']);
             $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, biography=:biography WHERE id =:id");
-            $second_stmt -> execute(array("name" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limbs"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
+            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limbs"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
         $app_id = $db->lastInsertId();
-       $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id");
+       $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id WHERE app_id=:id");
          foreach ($abilities as $ability) {
             $third_stmt -> execute([$app_id, $ability]);
         }
@@ -281,7 +281,8 @@ else{
               $app_id = $db->lastInsertId();
               $third_stmt = $db->prepare("INSERT INTO login (app_id, login, pwd) VALUES (?,?,?)");
               $db->beginTransaction();
-              $third_stmt->execute(array($app_id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+              $third_stmt->execute(array($id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
+              $db->commit();
              }
            
         catch(PDOException $e) {

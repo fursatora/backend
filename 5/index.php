@@ -238,7 +238,7 @@ else {
             $second_stmt = $db->prepare("UPDATE application SET fio=:fio, year=:year, sex=:sex, email=:email, bio=:bio, limbs=:limbs WHERE id =:id");
             $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limb"=>$_POST['limbs'], "biography"=>$_POST['bio'], "id"=>$id));
             $third_stmt = $db->prepare("UPDATE app_ability SET abil_id WHERE app_id=:id");
-         
+        }
         catch(PDOException $e) {
             print('Error : ' . $e->getMessage());
             exit();

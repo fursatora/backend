@@ -295,7 +295,13 @@ else {
             exit();
         }
     }
-    setcookie('save', '1');
+    if (!isset($_SESSION)) { session_start(); }
 
-    header('Location: index.php');
-}}
+    if(!empty($_SESSION['is_admin'])){
+        header('Location: admin.php');
+        exit();
+    } else {
+        setcookie('save', '1');
+        header('Location: index.php');
+    }
+}

@@ -222,10 +222,6 @@ else{
         setcookie('accept_value', $_POST['accept'], time() + 30 * 24 * 60 * 60);
     }
  
-   $ability_insert = [];
-    foreach ($ability_data as $ability) {
-        $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
-    }
  
     if ($errors) {
         header('Location: index.php');
@@ -250,10 +246,13 @@ else{
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
-            $second_stmt = $db->prepare("UPDATE users SET name=:name, year=:year, sex=:sex, email=:email, bio=:bio, limb=:limb WHERE id =:id");
-            $second_stmt -> execute(array("name" => $_POST['fio'], "year" => $_POST['year'], "sex" => $_POST['sex'], "email" => $_POST['email'], "bio"=>$_POST['text'], "limb"=>$_POST['limb'], "id"=>$id));
-            $third_stmt = $db->prepare("UPDATE abilities SET 1=:1, 2=:2, 3=:3, 4=:4 WHERE user_id=:id");
-            $third_stmt->execute(array("1" => $ability_insert['1'], "2" => $ability_insert['2'], "3" => $ability_insert['3'], "4" => $ability_insert['4'], "id" => $id));
+            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, biography=:biography WHERE id =:id");
+            $second_stmt -> execute(array("name" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limbs"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
+        $app_id = $db->lastInsertId();
+       $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id");
+         foreach ($abilities as $ability) {
+            $third_stmt -> execute([$app_id, $ability]);
+        }
 
         }
         catch(PDOException $e) {

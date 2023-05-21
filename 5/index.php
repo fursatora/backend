@@ -5,7 +5,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
 function getUserId($login){
     $user = 'u52827';
-    $pass = '6645271';
+    $pass = '4296369';
     $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
         $get_id = $db->prepare("SELECT app_id FROM login WHERE login=:login");

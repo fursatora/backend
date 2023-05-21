@@ -8,7 +8,7 @@ function getUserId($login){
     $pass = '4296369';
     $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
-        $get_id = $db->prepare("SELECT user_id FROM login WHERE login=:login");
+        $get_id = $db->prepare("SELECT app_id FROM login WHERE login=:login");
         $db->beginTransaction();
         $get_id->execute(array("login" => $login));
         $id = (current(current($get_id->fetchAll(PDO::FETCH_ASSOC))));
@@ -125,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             exit();
         }
 
-        $values['fio_value'] = filter_var($data['name'],  FILTER_SANITIZE_SPECIAL_CHARS);
+        $values['fio_value'] = filter_var($data['fio'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['email_value'] = filter_var($data['email'], FILTER_SANITIZE_SPECIAL_CHARS);
         $values['year_value'] = filter_var($data['year'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['sex_value'] = $data['sex'];
@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM abilities WHERE user_id=:id");
+            $stmt = $db->prepare("SELECT * FROM abilities WHERE app_id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -246,7 +246,7 @@ else{
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
-            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, biography=:biography WHERE id =:id");
+            $second_stmt = $db->prepare("UPDATE application SET fio=:fio, email=:email, year=:year, sex=:sex,  limbs=:limbs, biography=:bio WHERE id =:id");
             $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limbs"=>$_POST['limbs'], "biography"=>$_POST['bio'],  "id"=>$id));
         $app_id = $db->lastInsertId();
        $third_stmt = $db->prepare("UPDATE app_ability SET app_id=:app_id, abil_id=:abil_id WHERE app_id=:id");

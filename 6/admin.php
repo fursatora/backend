@@ -37,7 +37,7 @@
 
     echo '<h1 class="text-center m-5">Вы успешно авторизовались и видите защищенные паролем данные.</h1>';
 
-    $first_stmt = $db->prepare("SELECT * FROM users");
+    $first_stmt = $db->prepare("SELECT * FROM application");
     try {
         $first_stmt->execute();
         $data = $first_stmt->fetchAll(PDO::FETCH_ASSOC);

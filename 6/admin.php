@@ -154,7 +154,7 @@
 
     foreach ($data as $user_data){
         if(isset($_POST['change'.$user_data['id']])){
-            $stmt = $db->prepare("SELECT login FROM login WHERE user_id=:id");
+            $stmt = $db->prepare("SELECT login FROM login WHERE app_id=:id");
             try {
                 $stmt->execute(array('id'=>$user_data['id']));
                 $login = current(current($stmt->fetchAll(PDO::FETCH_ASSOC)));

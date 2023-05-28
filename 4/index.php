@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $errors['abilities_empty'] = !empty($_COOKIE['abilities_empty']);
     $errors['abilities_error'] = !empty($_COOKIE['abilities_error']);
     $errors['accept_error'] = !empty($_COOKIE['accept_error']);
+    $errors['bio_empty'] = !empty($_COOKIE['bio_empty']);
 
     if ($errors['fio_empty']) {
         setcookie('fio_empty', '', 100000);
@@ -57,6 +58,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         setcookie('accept_error', '', 100000);
         $messages[] = '<div class="error">Вы не согласились.</div>';
     }
+    
+    
+    if ($errors['year_error']) {
+        setcookie('year_error', '', 100000);
+        $messages[] = '<div class="error">Некорректные данные в поле: дата рождения.</div>';
+    }
+    if ($errors['bio_empty']) {
+        setcookie('bio_empty', '', 100000);
+        $messages[] = '<div class="error">Заполните биографию.</div>';
+    }
+    
 
     $values = array();
     $values['fio_value'] = empty($_COOKIE['fio_value']) ? '' : $_COOKIE['fio_value'];
@@ -96,14 +108,22 @@ else{
         setcookie('email_value', $_POST['email'], time() + 30 * 24 * 60 * 60);
     }
 
-    //year
-    if (empty($_POST['year'])) {
+    
+     if (empty($_POST['year'])) {
         setcookie('year_empty', '1', time() + 24 * 60 * 60);
         $errors = TRUE;
     }
     else {
+        $year = $_POST['year'];
+        if (!preg_match("/(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[ \/\.\-]/", $year)) {
+            setcookie('year_error', '1', time() + 24 * 60 * 60);
+            //print("Укажите корректный год.<br>");
+            $errors = TRUE;
+        }
+        else{
             setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
         }
+    }
     
 
     //abilities
@@ -153,6 +173,8 @@ else{
         setcookie('abilities_empty', '', 100000);
         setcookie('abilities_error', '', 100000);
         setcookie('accept_error', '', 100000);
+        setcookie('year_error', '', 100000);
+        setcookie('bio_empty', '', 100000);
     }
 
     $user = 'u52827';

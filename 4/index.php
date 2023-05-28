@@ -114,16 +114,8 @@ else{
         $errors = TRUE;
     }
     else {
-        $year = $_POST['year'];
-        if (!preg_match("/(0?[1-9]|[12][0-9]|3[01])[\/\-\.](0?[1-9]|1[012])[ \/\.\-]/", $year)) {
-            setcookie('year_error', '1', time() + 24 * 60 * 60);
-            //print("Укажите корректный год.<br>");
-            $errors = TRUE;
-        }
-        else{
             setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
         }
-    }
     
 
     //abilities

@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     </div>
     <footer>
         <h2 class="text-center m-3">
-            Фурса 23
+            Фурса В.Е.
         </h2>
     </footer>
     </body>
@@ -75,7 +75,7 @@ else {
     }
     else {
         if (password_verify($_POST['pwd'], $data['pwd'])) {
-            $_SESSION['uid'] = $data['app_id'];
+            $_SESSION['uid'] = $data['user_id'];
             $_SESSION['login'] = $_POST['login'];
             header('Location: ./');
             exit();

@@ -108,7 +108,7 @@ else{
         setcookie('email_value', $_POST['email'], time() + 30 * 24 * 60 * 60);
     }
 
-    
+    //year
      if (empty($_POST['year'])) {
         setcookie('year_empty', '1', time() + 24 * 60 * 60);
         $errors = TRUE;
@@ -117,6 +117,14 @@ else{
             setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
         }
     
+    //bio
+    if (empty($_POST['bio'])) {
+        setcookie('bio_empty', '1', time() + 24 * 60 * 60);
+        $errors = TRUE;
+    }
+    else {
+            setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
+        }
 
     //abilities
     $ability_data = ['1', '2', '3', '4'];

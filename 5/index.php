@@ -8,7 +8,7 @@ function getUserId($login){
     $pass = '4296369';
     $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
     try {
-        $get_id = $db->prepare("SELECT app_id FROM login WHERE login=:login");
+        $get_id = $db->prepare("SELECT user_id FROM login WHERE login=:login");
         $db->beginTransaction();
         $get_id->execute(array("login" => $login));
         $id = (current(current($get_id->fetchAll(PDO::FETCH_ASSOC))));
@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         $id = getUserId($_SESSION['login']);
         try {
-            $stmt = $db->prepare("SELECT * FROM application WHERE id=:id");
+            $stmt = $db->prepare("SELECT * FROM users WHERE id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             exit();
         }
 
-        $values['fio_value'] = filter_var($data['fio'],  FILTER_SANITIZE_SPECIAL_CHARS);
+        $values['fio_value'] = filter_var($data['name'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['email_value'] = filter_var($data['email'], FILTER_SANITIZE_SPECIAL_CHARS);
         $values['year_value'] = filter_var($data['year'],  FILTER_SANITIZE_SPECIAL_CHARS);
         $values['sex-value'] = $data['sex'];
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values['bio_value'] = filter_var($data['bio'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM app_ability WHERE app_id=:id");
+            $stmt = $db->prepare("SELECT * FROM abilities WHERE user_id=:id");
             $result = $stmt->execute(array("id"=>$id));
             $data = current($stmt->fetchAll(PDO::FETCH_ASSOC));
         }
@@ -143,7 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             exit();
         }
 
-        
+        $ability_data = ['immort', 'wall', 'levit', 'invis'];
+        for($i=0; $i<4; $i++){
+            $values['ability'.$i] = $data[$ability_data[$i]];
+        }
+
         printf('<div class="alert alert-secondary" role="alert">
   Вход с логином %s', $_SESSION['login']);
         printf('</div>');
@@ -185,7 +189,7 @@ else {
         }
 
     //abilities
-    $ability_data = ['1', '2', '3', '4'];
+    $ability_data = ['immort', 'wall', 'levit', 'invis'];
     if (empty($_POST['abilities'])) {
         setcookie('abilities_empty', '1', time() + 24 * 60 * 60);
         $errors = TRUE;
@@ -198,16 +202,28 @@ else {
                 $errors = TRUE;
             }
         }
-        
+        if(!$errors){
+            $ability_insert = [];
+            $i=0;
+            foreach ($ability_data as $ability) {
+                $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
+                setcookie('ability'.$i, $ability_insert[$ability], time() + 30 * 24 * 60 * 60);
+                $i++;
+            }
+        }
     }
 
     if (!$errors) {
         setcookie('sex_value', $_POST['sex'], time() + 30 * 24 * 60 * 60);
-        setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
-        setcookie('limb_value', $_POST['limbs'], time() + 30 * 24 * 60 * 60);
+        setcookie('bio_value', $_POST['text'], time() + 30 * 24 * 60 * 60);
+        setcookie('limb_value', $_POST['limb'], time() + 30 * 24 * 60 * 60);
     }
 
-   
+    $ability_insert = [];
+    foreach ($ability_data as $ability) {
+        $ability_insert[$ability] = in_array($ability, $abilities) ? 1 : 0;
+    }
+
     if($errors){
         header('Location: index.php');
         exit();
@@ -231,9 +247,11 @@ else {
         $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
         try {
             $id = getUserId($_SESSION['login']);
-            $second_stmt = $db->prepare("UPDATE application SET fio=:fio,email=:email, year=:year, sex=:sex,  limbs=:limbs, bio=:bio  WHERE id =:id");
-            $second_stmt -> execute(array("fio" => $_POST['fio'],"email" => $_POST['email'], "year" => $_POST['year'], "sex" => $_POST['sex'], "limb"=>$_POST['limbs'], "biography"=>$_POST['bio'], "id"=>$id));
-            $third_stmt = $db->prepare("UPDATE app_ability SET abil_id WHERE app_id=:id");
+            $second_stmt = $db->prepare("UPDATE users SET name=:name, year=:year, sex=:sex, email=:email, bio=:bio, limb=:limb WHERE id =:id");
+            $second_stmt -> execute(array("name" => $_POST['fio'], "year" => $_POST['year'], "sex" => $_POST['sex'], "email" => $_POST['email'], "bio"=>$_POST['text'], "limb"=>$_POST['limb'], "id"=>$id));
+            $third_stmt = $db->prepare("UPDATE abilities SET immort=:immort, wall=:wall, levit=:levit, invis=:invis WHERE user_id=:id");
+            $third_stmt->execute(array("immort" => $ability_insert['immort'], "wall" => $ability_insert['wall'], "levit" => $ability_insert['levit'], "invis" => $ability_insert['invis'], "id" => $id));
+
         }
         catch(PDOException $e) {
             print('Error : ' . $e->getMessage());
@@ -248,25 +266,27 @@ else {
 
         try {
             $db = new PDO('mysql:host=localhost;dbname=u52827', $user, $pass);
-            $first_stmt = $db->prepare("INSERT INTO application (fio,email,year,sex,limbs,biography) VALUES (?,?,?,?,?,?)");
+            $first_stmt = $db->prepare("INSERT INTO users (name,year,sex,email,bio,limb) VALUES (?,?,?,?,?,?)");
 
             try{
                 $db->beginTransaction();
-                $first_stmt->execute(array($_POST['fio'],  $_POST['email'], $_POST['year'], $_POST['sex'],  $_POST['limb'],$_POST['bio'],));
+                $first_stmt->execute(array($_POST['fio'], $_POST['year'], $_POST['sex'], $_POST['email'], $_POST['text'], $_POST['limb']));
                 $id = $db->lastInsertId();
                 $db->commit();
             } catch (PDOException $exception){
                 print "Error: " . $exception->getMessage() . "</br>";
             }
 
-             $app_id = $db->lastInsertId();
-             $second_stmt = $db->prepare("INSERT INTO app_ability SET app_id=?, abil_id = ?");
-             foreach ($abilities as $ability) {
-             $second_stmt -> execute([$app_id, $ability]);
-             }
-         
+            $second_stmt = $db->prepare("INSERT INTO abilities (user_id,immort,wall,levit,invis) VALUES (?,?,?,?,?)");
+            try{
+                $db->beginTransaction();
+                $second_stmt->execute(array($id,$ability_insert['immort'],$ability_insert['wall'],$ability_insert['levit'],$ability_insert['invis']));
+                $db->commit();
+            } catch (PDOException $exception){
+                print "Error: " . $exception->getMessage() . "</br>";
+            }
             try {
-                $third_stmt = $db->prepare("INSERT INTO login (app_id, login, pwd) VALUES (?,?,?)");
+                $third_stmt = $db->prepare("INSERT INTO login (user_id, login, pwd) VALUES (?,?,?)");
                 $db->beginTransaction();
                 $third_stmt->execute(array($id, $login, password_hash($pwd, PASSWORD_DEFAULT)));
                 $db->commit();
